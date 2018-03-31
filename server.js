@@ -1,7 +1,11 @@
-const puppeteer = require('puppeteer');
-const CONFIG = require('./config.json')
+const CONFIG = require('./config.json');
+const SCRAPER = require('./scraper');
 
 (async (email, password, url) => {
+    const CREDS = {
+        email,
+        password,
+    }
     const SELECTORS = {
         email: '#email',
         submit: '#loginbutton',
@@ -11,34 +15,11 @@ const CONFIG = require('./config.json')
     }
 
     try {
-        //launching pupeteer
-        const BROWSER = await puppeteer.launch({
-            headless: false
-        })
 
-        //launching Browser
-        const PAGE = await BROWSER.newPage()
+        await SCRAPER.main(SELECTORS, CREDS)
 
-        //Going to scrapping url
-        await PAGE.goto(SELECTORS.mainUrl)
 
-        //entering username
-        await PAGE.click(SELECTORS.email)
-        await PAGE.keyboard.type(email)
-
-        //entering password
-        await PAGE.keyboard.press('Tab')
-        await PAGE.keyboard.type(password)
-        await PAGE.click(SELECTORS.submit)
-
-        await PAGE.waitForNavigation();
-
-        //going to custom scrapping url
-        await PAGE.goto(SELECTORS.scrapingUrl)
-
-        // console.log( await PAGE.$$(`#u_0_1u > div > div.lfloat._ohe > span > div._3ekx._29_4 > a`))
-
-        BROWSER.close();
+        setTimeout(() => console.log('wait'), 1000)
 
     } catch (err) {
         console.log(err)
