@@ -2,6 +2,7 @@ const CONFIG = require('./config.json');
 const SCRAPER = require('./scraper');
 
 (async (email, password, url) => {
+
     const CREDS = {
         email,
         password,
@@ -9,17 +10,25 @@ const SCRAPER = require('./scraper');
     const SELECTORS = {
         email: '#email',
         submit: '#loginbutton',
-        mainUrl: 'https://fb.com',
-        scrapingUrl: url
-
+        mainUrl: 'https://fb.com/',
+        scrapingUrl: url,
+        loopingTime: 5
     }
 
     try {
-
         await SCRAPER.main(SELECTORS, CREDS)
 
 
-        setTimeout(() => console.log('wait'), 1000)
+        const RECURSIVE = async (recCounter) => {
+            if(count < recCounter) {
+                count++
+                await SCRAPER.main(SELECTORS, CREDS)
+                await RECURSIVE()
+            }
+        }
+
+        await RECURSIVE(SELECTORS.loopingTime)
+
 
     } catch (err) {
         console.log(err)
