@@ -1,0 +1,15 @@
+{
+  "name": "spiderprememain",
+  "version": "1.0.0",
+  "description": "Spiderpreme main server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^5.0.12",
+    "puppeteer": "^1.2.0"
+  }
+}
