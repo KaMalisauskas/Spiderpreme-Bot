@@ -1,6 +1,5 @@
 const PUPPETEER = require('puppeteer');
 const CHEERIO = require('cheerio');
-const fs = require('fs');
 
 
 exports.main = (SELECTORS, CREDS) => {
@@ -8,6 +7,12 @@ exports.main = (SELECTORS, CREDS) => {
     return new Promise((resolve, reject) => {
 
         setTimeout( async () => {
+
+            let obj = {}
+            let i = 0
+            let title
+            let url
+
             try {
                 console.log('<<<Starting Scrapping')
 
@@ -20,38 +25,15 @@ exports.main = (SELECTORS, CREDS) => {
                 //launching Browser
                 const PAGE = await BROWSER.newPage()
 
-                // //Going to scrapping url
-                // await PAGE.goto(SELECTORS.mainUrl, {
-                //     timeout: 3000000
-                // })
-                //
-                // // //entering username
-                // await PAGE.click(SELECTORS.email)
-                // await PAGE.keyboard.type(CREDS.email)
-                //
-                // //entering password
-                // await PAGE.keyboard.press('Tab')
-                // await PAGE.keyboard.type(CREDS.password)
-                // await PAGE.click(SELECTORS.submit)
-                //
-                // await PAGE.waitForNavigation({ timeout: 120000 });
-
-                //going to custom scrapping url
+                //going to scrapping url
                 await PAGE.goto(SELECTORS.scrapingUrl, {
                     timeout: 3000000
                 })
 
-
-
-                // const RESULT = await PAGE.$$(`[role='article']`, body => body.innerHTML)
-
+                // getting all posts innerHTML
                 const POSTS =  await PAGE.evaluate( selector => [...document.querySelectorAll(selector)].map(ele => ele.innerHTML), `[role='article']`)
 
-
-                let obj = {}
-                let i = 0
-                let title;
-                let url
+                //getting links and url from posts
                 for(let post of POSTS) {
                     let $ = CHEERIO.load(post)
 
@@ -64,22 +46,6 @@ exports.main = (SELECTORS, CREDS) => {
 
                     i++
                 }
-
-                console.log(obj)
-
-                // const RESULT = await PAGE.$x('//*[@id="content_container"]', (body) => body.innerText)
-                //
-                //
-                //
-                // let text = await PAGE.evaluate((body) => body.innerHTML, RESULT[0])
-                //
-                // let $ = CHEERIO.load(text)
-                //
-                // let div =  $('div:nth-child(2)').html()
-                //
-                // fs.writeFile('text1.txt',POSTS, (err) => {
-                //     if(err) console.log(err)
-                // })
 
                 console.log('<<<Stopping Scrapping')
 

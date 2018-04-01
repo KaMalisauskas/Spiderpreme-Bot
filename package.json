@@ -11,7 +11,6 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "mongoose": "^5.0.12",
-    "puppeteer": "^1.2.0",
-    "x-ray": "^2.3.2"
+    "puppeteer": "^1.2.0"
   }
 }
