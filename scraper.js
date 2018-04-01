@@ -1,4 +1,7 @@
-const puppeteer = require('puppeteer');
+const PUPPETEER = require('puppeteer');
+const CHEERIO = require('cheerio');
+const fs = require('fs');
+
 
 exports.main = (SELECTORS, CREDS) => {
 
@@ -9,39 +12,74 @@ exports.main = (SELECTORS, CREDS) => {
                 console.log('<<<Starting Scrapping')
 
                 //launching pupeteer
-                const BROWSER = await puppeteer.launch({
-                    headless: false,
+                const BROWSER = await PUPPETEER.launch({
+                    headless: true,
                     timeout: 0
                 })
 
                 //launching Browser
                 const PAGE = await BROWSER.newPage()
 
-                //Going to scrapping url
-                await PAGE.goto(SELECTORS.mainUrl)
-
-                // //entering username
-                await PAGE.click(SELECTORS.email)
-                await PAGE.keyboard.type(CREDS.email)
-
-                //entering passwordç
-                await PAGE.keyboard.press('Tab')
-                await PAGE.keyboard.type(CREDS.password)
-                await PAGE.click(SELECTORS.submit)
-
-                await PAGE.waitForNavigation();
+                // //Going to scrapping url
+                // await PAGE.goto(SELECTORS.mainUrl, {
+                //     timeout: 3000000
+                // })
+                //
+                // // //entering username
+                // await PAGE.click(SELECTORS.email)
+                // await PAGE.keyboard.type(CREDS.email)
+                //
+                // //entering password
+                // await PAGE.keyboard.press('Tab')
+                // await PAGE.keyboard.type(CREDS.password)
+                // await PAGE.click(SELECTORS.submit)
+                //
+                // await PAGE.waitForNavigation({ timeout: 120000 });
 
                 //going to custom scrapping url
-                await PAGE.goto(SELECTORS.scrapingUrl)
+                await PAGE.goto(SELECTORS.scrapingUrl, {
+                    timeout: 3000000
+                })
 
 
-                // const RESULT = await PAGE.$x('//*[@id="u_fetchstream_2_t"]/div/div[1]/span/div[2]/div/div[1]/a', (body) => body.innerText)
-                // const RESULT = await PAGE.$x('//*[@id="u_0_1o"]/div/div[1]/span/div[2]/div/div[1]/a', (body) => body.innerText)
-                const RESULT = await PAGE.$x('//*[@id="u_0_3g"]/div/div[1]/span/div[2]/div/div[1]/a', (body) => body.innerText)
+
+                // const RESULT = await PAGE.$$(`[role='article']`, body => body.innerHTML)
+
+                const POSTS =  await PAGE.evaluate( selector => [...document.querySelectorAll(selector)].map(ele => ele.innerHTML), `[role='article']`)
 
 
-                let text = await PAGE.evaluate((body) => body.textContent, RESULT[0])
-                console.log(text)
+                let obj = {}
+                let i = 0
+                let title;
+                let url
+                for(let post of POSTS) {
+                    let $ = CHEERIO.load(post)
+
+                    title = $('p').text()
+                    url = $('._3m6- > div').find('a').attr('href')
+                    if(url || title) obj[i] = {}
+
+                    if (title) obj[i]['title'] = title
+                    if (url) obj[i]['url'] = url
+
+                    i++
+                }
+
+                console.log(obj)
+
+                // const RESULT = await PAGE.$x('//*[@id="content_container"]', (body) => body.innerText)
+                //
+                //
+                //
+                // let text = await PAGE.evaluate((body) => body.innerHTML, RESULT[0])
+                //
+                // let $ = CHEERIO.load(text)
+                //
+                // let div =  $('div:nth-child(2)').html()
+                //
+                // fs.writeFile('text1.txt',POSTS, (err) => {
+                //     if(err) console.log(err)
+                // })
 
                 console.log('<<<Stopping Scrapping')
 

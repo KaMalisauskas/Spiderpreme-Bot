@@ -12,26 +12,21 @@ const SCRAPER = require('./scraper');
         submit: '#loginbutton',
         mainUrl: 'https://fb.com/',
         scrapingUrl: url,
-        loopingTime: 5
+        loopingTime: 1
     }
 
     try {
-        await SCRAPER.main(SELECTORS, CREDS)
 
+        let count = 0
 
-        const RECURSIVE = async (recCounter) => {
-            if(count < recCounter) {
-                count++
-                await SCRAPER.main(SELECTORS, CREDS)
-                await RECURSIVE()
-            }
-        }
-
-        await RECURSIVE(SELECTORS.loopingTime)
+        // while(count < SELECTORS.loopingTime) {
+            count++
+            await SCRAPER.main(SELECTORS, CREDS)
+        // }
 
 
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 
 
