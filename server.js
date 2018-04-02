@@ -22,12 +22,10 @@ const NOTIFY = require('./Modules/emailNotification');
 
     try {
 
-        while(count < SELECTORS.loopingTime) {
-
+        while(true) {
             count++
             let newMap = await SCRAPER(SELECTORS, CREDS, map)
-            newMap = await CLEANER(newMap)
-            map = newMap
+            map = await CLEANER(newMap)
         }
 
 

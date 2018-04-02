@@ -46,7 +46,7 @@ class Notify {
 
         try{
             await transporter.sendMail(HelperOptions);
-            return 'Email sent successfully'
+            return '**** Email sent successfully'
         } catch(error) {
             return error
         }

@@ -10,11 +10,7 @@ module.exports = exports = (SELECTORS, CREDS, Map) => {
 
         setTimeout( async () => {
 
-            let obj = {};
             let i = 0;
-            let title;
-            let url;
-            let linksTitle;
             const NOW = MOMENT();
             const KEYWORD = SELECTORS.keyword.trim();
 
@@ -40,33 +36,29 @@ module.exports = exports = (SELECTORS, CREDS, Map) => {
 
                 //getting links and url from posts
                 for(let post of POSTS) {
+
                     let containsKeyword;
                     let $ = CHEERIO.load(post);
+                    let title = $('p').text();
+                    let url = $('._3m6- > div').find('a').attr('href');
+                    let linksTitle = $('._6m3._--6').text();
 
-                    title = $('p').text();
 
-                    linksTitle = $('._6m3._--6').text();
+                    if(url || title || linksTitle) {
 
-                    url = $('._3m6- > div').find('a').attr('href');
+                        if (url.includes('video')) url = 'https://facebook.com' + url;
 
-                    console.log(`${title} ${linksTitle} ${url}`);
+                        if (title.includes(KEYWORD)) containsKeyword = title;
+                        else if (linksTitle.includes(KEYWORD)) containsKeyword = linksTitle;
 
-                    (!url && !title) ? reject('There are no elements to scrap') : obj[i] = {};
+                        if (containsKeyword && !Map.has(title)) {
+                            console.log('**** Found new post!!');
 
-                    if(url.includes('video')) url = 'https://facebook.com';
+                            console.log(await NOTIFY.success(containsKeyword, SELECTORS.scrapingUrl, url, KEYWORD));
 
-                    if(title.includes(KEYWORD)) containsKeyword = title;
-
-                    else if(linksTitle.includes(KEYWORD)) containsKeyword = linksTitle;
-
-                    if(containsKeyword &&  !Map.has(title) ) {
-                        console.log('<<< Found new post!!');
-
-                        console.log( await NOTIFY.success(containsKeyword, SELECTORS.scrapingUrl, url, KEYWORD) );
-
-                        Map.set(title, NOW.format('MM-DD') )
+                            Map.set(title, NOW.format('MM-DD'))
+                        }
                     }
-
                     i++;
                 }
 
@@ -79,7 +71,7 @@ module.exports = exports = (SELECTORS, CREDS, Map) => {
             } catch(err) {
                 reject(err)
             }
-        }, 1000)
+        }, 10000)
 
     })
 
