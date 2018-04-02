@@ -3,28 +3,21 @@ const SCRAPER = require('./Modules/scraper');
 const CLEANER = require('./Modules/mapCleaner');
 const NOTIFY = require('./Modules/emailNotification');
 
-(async (email, password, url, keyword) => {
+(async (url, keyword) => {
 
-    const CREDS = {
-        email,
-        password,
-    }
     const SELECTORS = {
         keyword,
         email: '#email',
         submit: '#loginbutton',
         mainUrl: 'https://fb.com/',
         scrapingUrl: url,
-        loopingTime: 3
     }
-    let count = 0
     let map = new Map()
 
     try {
 
         while(true) {
-            count++
-            let newMap = await SCRAPER(SELECTORS, CREDS, map)
+            let newMap = await SCRAPER(SELECTORS, map)
             map = await CLEANER(newMap)
         }
 
@@ -35,5 +28,5 @@ const NOTIFY = require('./Modules/emailNotification');
     }
 
 
-})(CONFIG.main.email, CONFIG.main.password, CONFIG.main.url, CONFIG.main.keyword)
+})(CONFIG.main.url, CONFIG.main.keyword)
 

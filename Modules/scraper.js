@@ -4,7 +4,7 @@ const MOMENT = require('moment');
 const NOTIFY = require('./emailNotification');
 
 
-module.exports = exports = (SELECTORS, CREDS, Map) => {
+module.exports = exports = (SELECTORS, Map) => {
 
     return new Promise((resolve, reject) => {
 
@@ -46,6 +46,7 @@ module.exports = exports = (SELECTORS, CREDS, Map) => {
 
                     if(url || title || linksTitle) {
 
+                        //if post is a video
                         if (url.includes('video')) url = 'https://facebook.com' + url;
 
                         if (title.includes(KEYWORD)) containsKeyword = title;
