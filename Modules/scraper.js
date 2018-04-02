@@ -1,8 +1,9 @@
 const PUPPETEER = require('puppeteer');
 const CHEERIO = require('cheerio');
+const MOMENT = require('moment');
 
 
-exports.main = (SELECTORS, CREDS) => {
+module.exports = exports = (SELECTORS, CREDS, Map) => {
 
     return new Promise((resolve, reject) => {
 
@@ -12,6 +13,9 @@ exports.main = (SELECTORS, CREDS) => {
             let i = 0
             let title
             let url
+            let linksTitle
+            const NOW = MOMENT()
+            const KEYWORD = SELECTORS.keyword.trim()
 
             try {
                 console.log('<<<Starting Scrapping')
@@ -38,20 +42,30 @@ exports.main = (SELECTORS, CREDS) => {
                     let $ = CHEERIO.load(post)
 
                     title = $('p').text()
-                    url = $('._3m6- > div').find('a').attr('href')
-                    if(url || title) obj[i] = {}
 
-                    if (title) obj[i]['title'] = title
-                    if (url) obj[i]['url'] = url
+                    linksTitle = $('._6m3._--6').text()
+
+                    url = 'https://facebook.com' + $('._3m6- > div').find('a').attr('href');
+
+                    (!url && !title && !linksTitle) ? reject('There are no elements to scrap') : obj[i] = {}
+
+                    console.log(url)
+
+                    if(title.includes(KEYWORD) || linksTitle.includes(KEYWORD) &&  !Map.has(title) ) {
+                        console.log('<<< Found new post!!')
+                        Map.set(title, NOW.format('MM-DD') )
+                    }
 
                     i++
+                    break
                 }
 
+                console.log(obj)
                 console.log('<<<Stopping Scrapping')
 
                 BROWSER.close();
 
-                resolve('Successfully scrapped')
+                resolve(Map)
 
             } catch(err) {
                 reject(err)

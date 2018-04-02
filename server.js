@@ -1,28 +1,37 @@
 const CONFIG = require('./config.json');
-const SCRAPER = require('./scraper');
+const SCRAPER = require('./Modules/scraper');
+const CLEANER = require('./Modules/mapCleaner');
 
-(async (email, password, url) => {
+(async (email, password, url, keyword) => {
 
     const CREDS = {
         email,
         password,
     }
     const SELECTORS = {
+        keyword,
         email: '#email',
         submit: '#loginbutton',
         mainUrl: 'https://fb.com/',
         scrapingUrl: url,
-        loopingTime: 1
+        loopingTime: 2
     }
+    let count = 0
+    let map = new Map()
 
     try {
 
-        let count = 0
+        while(count < SELECTORS.loopingTime) {
 
-        // while(count < SELECTORS.loopingTime) {
             count++
-            await SCRAPER.main(SELECTORS, CREDS)
-        // }
+            let newMap = await SCRAPER(SELECTORS, CREDS, map)
+            newMap = CLEANER(newMap)
+            map = newMap
+            console.log(map)
+
+            break
+
+        }
 
 
     } catch (err) {
@@ -30,5 +39,5 @@ const SCRAPER = require('./scraper');
     }
 
 
-})(CONFIG.main.email, CONFIG.main.password, CONFIG.main.url)
+})(CONFIG.main.email, CONFIG.main.password, CONFIG.main.url, CONFIG.main.keyword)
 
