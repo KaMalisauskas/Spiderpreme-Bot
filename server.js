@@ -1,6 +1,7 @@
 const CONFIG = require('./config.json');
 const SCRAPER = require('./Modules/scraper');
 const CLEANER = require('./Modules/mapCleaner');
+const NOTIFY = require('./Modules/emailNotification');
 
 (async (email, password, url, keyword) => {
 
@@ -14,7 +15,7 @@ const CLEANER = require('./Modules/mapCleaner');
         submit: '#loginbutton',
         mainUrl: 'https://fb.com/',
         scrapingUrl: url,
-        loopingTime: 2
+        loopingTime: 3
     }
     let count = 0
     let map = new Map()
@@ -25,17 +26,14 @@ const CLEANER = require('./Modules/mapCleaner');
 
             count++
             let newMap = await SCRAPER(SELECTORS, CREDS, map)
-            newMap = CLEANER(newMap)
+            newMap = await CLEANER(newMap)
             map = newMap
-            console.log(map)
-
-            break
-
         }
 
 
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        await NOTIFY.error(err, SELECTORS.keyword)
     }
 
 
