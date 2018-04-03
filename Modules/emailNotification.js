@@ -31,11 +31,11 @@ class Notify {
         const HelperOptions = {
             from:`"Spiderpreme_Bot" <${this.confEmail()}`,
             to: CONFIG.newsletter.toEmail,
-            subject: `New Post with keyword(s) ${keyword}`,
+            subject: `New Post with keyword(s) "${keyword}"`,
             html: `
-                <h3>We found a post containing your requested keyword in page ${scpraingUrl}!!</h3>
+                <h3>We found a post containing your requested keyword in a page ${scpraingUrl}!!</h3>
                 <p>The word was used in this sentence:</p>
-                <p>${header}</p>
+                <p>"${header}"</p>
                 <p>Link to article:</p>
                 <a href="${url}">Proceed to link!</a>
                 <br/><br/><br/>

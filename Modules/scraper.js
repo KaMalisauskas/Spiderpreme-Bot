@@ -72,7 +72,7 @@ module.exports = exports = (SELECTORS, Map) => {
             } catch(err) {
                 reject(err)
             }
-        }, 10000)
+        }, 100000)
 
     })
 
