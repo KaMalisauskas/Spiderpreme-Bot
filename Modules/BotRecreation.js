@@ -8,6 +8,7 @@ module.exports = exports = async (map) => {
         let requests = await REQUESTMODEL.find()
 
         if(!map) {
+
             let map = new Map();
             map.set('bot', []);
             requests.forEach( (request) => {
@@ -22,13 +23,15 @@ module.exports = exports = async (map) => {
                 map.get('bot').push(SCRAPER(map, obj.email))
             })
             resolve(map)
+
         } else {
+
             let array = []
             map.set('bot', [])
+
             requests.forEach( (req) => {
 
                 array.push(req.email)
-
                 if(map.has(req.email)) {
 
                     if (map.get(req.email).url !== req.url) map.get(req.email).url = req.url;

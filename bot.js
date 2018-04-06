@@ -3,7 +3,6 @@ const CONFIG = require('./config.json');
 const SCRAPER = require('./Modules/scraper');
 const CLEANER = require('./Modules/mapCleaner');
 const NOTIFY = require('./Modules/emailNotification');
-const REQUESTMODEL = require('./Modules/RequestModel');
 const BotSetup = require('./Modules/BotRecreation');
 
 

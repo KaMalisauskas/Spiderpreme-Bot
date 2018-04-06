@@ -54,7 +54,7 @@ module.exports = exports = (map, index) => {
                     if (containsKeyword && !MENTIONED.has(containsKeyword)) {
                         console.log('**** Found new post!!');
 
-                        // console.log(await NOTIFY.success(containsKeyword, SCRAPINGURL, url, KEYWORD, EMAIL));
+                        console.log(await NOTIFY.success(containsKeyword, SCRAPINGURL, url, KEYWORD, EMAIL));
 
                         MENTIONED.set(containsKeyword, NOW.format('MM-DD'))
                     }
