@@ -7,18 +7,12 @@ const NOTIFY = require('./emailNotification');
 module.exports = exports = (map, index) => {
 
     return new Promise((resolve, reject) => {
-
-        let i = 0;
-        let Map = map.get(index)
-        const KEYWORD = Map.keyword.trim();
-        const SCRAPINGURL = Map.url;
-        const EMAIL = Map.email;
-        const MENTIONED = Map.mentioned;
-        let result;
-
-
-
         setTimeout( async () => {
+            let Map = map.get(index)
+            const KEYWORD = Map.keyword.trim();
+            const SCRAPINGURL = Map.url;
+            const EMAIL = Map.email;
+            const MENTIONED = Map.mentioned;
 
             try {
                 console.log('<<<Starting Scrapping');
@@ -57,16 +51,14 @@ module.exports = exports = (map, index) => {
 
                     if (title.includes(KEYWORD)) containsKeyword = title;
                     else if (linksTitle.includes(KEYWORD)) containsKeyword = linksTitle;
-
-                    if (containsKeyword && !MENTIONED.has(title)) {
+                    if (containsKeyword && !MENTIONED.has(containsKeyword)) {
                         console.log('**** Found new post!!');
 
                         // console.log(await NOTIFY.success(containsKeyword, SCRAPINGURL, url, KEYWORD, EMAIL));
 
-                        MENTIONED.set(title, NOW.format('MM-DD'))
+                        MENTIONED.set(containsKeyword, NOW.format('MM-DD'))
                     }
                 }
-                i++;
 
                 console.log('<<<Stopping Scrapping');
 
@@ -77,7 +69,7 @@ module.exports = exports = (map, index) => {
             } catch(err) {
                 reject(err)
             }
-        }, 1000)
+        }, 5000)
 
     })
 

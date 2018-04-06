@@ -3,7 +3,7 @@ const CURRENT = require('moment')().format('MM-DD');
 module.exports = exports = (Map) => {
 
     for(let k of Map.keys()) {
-        if(!Number.isInteger(k)) continue;
+        if(k === 'bot') continue;
 
         let MENTIONED = Map.get(k).mentioned;
 
