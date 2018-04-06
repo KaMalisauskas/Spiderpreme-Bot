@@ -3,7 +3,7 @@ const NOW = MOMENT();
 const CURRENT = NOW.format('MM-DD');
 
 module.exports = exports = (Map) => {
-
+console.log(1)
      Map.forEach((value, key) => {
         let objTime = value
             .split('-')

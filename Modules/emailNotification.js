@@ -12,7 +12,7 @@ class Notify {
         return CONFIG.newsletter.password
     }
 
-    async success(header, scpraingUrl, url, keyword) {
+    async success(header, scpraingUrl, url, keyword, email) {
         if(!keyword && !url) throw new Error("Nothing to send");
 
         const transporter = NODEMAILER.createTransport({
@@ -30,7 +30,7 @@ class Notify {
 
         const HelperOptions = {
             from:`"Spiderpreme_Bot" <${this.confEmail()}`,
-            to: CONFIG.newsletter.toEmail,
+            to: email,
             subject: `New Post with keyword(s) "${keyword}"`,
             html: `
                 <h3>We found a post containing your requested keyword in a page ${scpraingUrl}!!</h3>
@@ -53,7 +53,7 @@ class Notify {
 
     }
 
-    async error(err, keyword) {
+    async error(err, keyword, email) {
 
         const transporter = NODEMAILER.createTransport({
             service: "Gmail",
@@ -70,10 +70,10 @@ class Notify {
 
         const HelperOptions = {
             from:`"Spiderpreme_Bot" <${this.confEmail()}`,
-            to: 'karolis.malisauskas@gmail.com',
+            to: email,
             subject: `Error occurred while scrapping`,
             html: `
-                <p>Sadly, an error occurred while scrapping ${keyword}</p>
+                <p>Sadly, an error occurred while scrapping for ${keyword} keyword</p>
                 <p>Error:</p>
                 <p><b>${err}</b></p>
             `
