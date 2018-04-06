@@ -1,24 +1,28 @@
-const MOMENT = require('moment');
-const NOW = MOMENT();
-const CURRENT = NOW.format('MM-DD');
+const CURRENT = require('moment')().format('MM-DD');
 
 module.exports = exports = (Map) => {
-console.log(1)
-     Map.forEach((value, key) => {
-        let objTime = value
-            .split('-')
-            .map(val => parseInt(val))
 
-        let currentTime = CURRENT
-            .split('-')
-            .map(val => parseInt(val))
+    for(let k of Map.keys()) {
+        if(!Number.isInteger(k)) continue;
 
-        //checking if obj didn't stay for to long in Map obj
-        if(objTime[0] === currentTime[0] && currentTime[1] - objTime[1] > 0) Map.delete(key)
-        if(objTime[0] !== currentTime[0]) Map.delete(key)
+        let MENTIONED = Map.get(k).mentioned;
 
-    })
+        MENTIONED.forEach((value, key) => {
+            let objTime = value
+                .split('-')
+                .map(val => parseInt(val));
+
+            let currentTime = CURRENT
+                .split('-')
+                .map(val => parseInt(val));
+
+            //checking if obj didn't stay for to long in Map obj
+            if (objTime[0] === currentTime[0] && currentTime[1] - objTime[1] > 0) MENTIONED.delete(key);
+            if (objTime[0] !== currentTime[0]) MENTIONED.delete(key);
+
+        })
+    }
 
     return Map
 
-}
+};

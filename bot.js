@@ -28,12 +28,12 @@ const REQUESTMODEL = require('./Modules/RequestModel');
 
         })
 
-        console.log( await Promise.all(map.get('bot')))
-        console.log(map)
-        // while(true) {
-        //     let newMap = await SCRAPER(SELECTORS, map)
-        //     map = await CLEANER(newMap)
-        // }
+
+        while(true) {
+            let newMapArray = await Promise.all(map.get('bot'))
+            newMapArray.map(elem => map.set(elem.index, elem))
+            map = await CLEANER(map)
+        }
 
 
     } catch (err) {

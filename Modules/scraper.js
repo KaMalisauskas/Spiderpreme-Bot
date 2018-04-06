@@ -13,7 +13,8 @@ module.exports = exports = (map, index) => {
         const KEYWORD = Map.keyword.trim();
         const SCRAPINGURL = Map.url;
         const EMAIL = Map.email;
-        const MENTIONED = Map.mentioned
+        const MENTIONED = Map.mentioned;
+        let result;
 
 
 
@@ -48,25 +49,24 @@ module.exports = exports = (map, index) => {
                     let url = $('._3m6- > div').find('a').attr('href');
                     let linksTitle = $('._6m3._--6').text();
 
+                    //if there are no values scraped from site, continue
+                    if(!url && !title && !linksTitle) continue;
 
-                    if(url || title || linksTitle) {
+                    //if post is a video
+                    if (url.includes('video')) url = 'https://facebook.com' + url;
 
-                        //if post is a video
-                        if (url.includes('video')) url = 'https://facebook.com' + url;
+                    if (title.includes(KEYWORD)) containsKeyword = title;
+                    else if (linksTitle.includes(KEYWORD)) containsKeyword = linksTitle;
 
-                        if (title.includes(KEYWORD)) containsKeyword = title;
-                        else if (linksTitle.includes(KEYWORD)) containsKeyword = linksTitle;
+                    if (containsKeyword && !MENTIONED.has(title)) {
+                        console.log('**** Found new post!!');
 
-                        if (containsKeyword && !MENTIONED.has(title)) {
-                            console.log('**** Found new post!!');
+                        // console.log(await NOTIFY.success(containsKeyword, SCRAPINGURL, url, KEYWORD, EMAIL));
 
-                            console.log(await NOTIFY.success(containsKeyword, SCRAPINGURL, url, KEYWORD, EMAIL));
-
-                            MENTIONED.set(title, NOW.format('MM-DD'))
-                        }
+                        MENTIONED.set(title, NOW.format('MM-DD'))
                     }
-                    i++;
                 }
+                i++;
 
                 console.log('<<<Stopping Scrapping');
 
