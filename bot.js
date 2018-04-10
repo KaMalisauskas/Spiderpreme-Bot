@@ -1,6 +1,5 @@
-require('./connect');
 const CONFIG = require('./config.json');
-const SCRAPER = require('./Modules/scraper');
+const TIMESTOP = require('./Modules/TimeStop');
 const CLEANER = require('./Modules/mapCleaner');
 const NOTIFY = require('./Modules/emailNotification');
 const BotSetup = require('./Modules/BotRecreation');
@@ -9,13 +8,17 @@ const BotSetup = require('./Modules/BotRecreation');
 (async () => {
 
     try {
-        let map = await BotSetup()
-        console.log(map)
+        let map = await BotSetup();
         while(true) {
-            let newMapArray = await Promise.all(map.get('bot'));
-            newMapArray.map(elem => map.set(elem.email, elem));
-            map = await CLEANER(map);
-            map = await BotSetup(map);
+            if(map.get('bot').length) {
+                let newMapArray = await Promise.all(map.get('bot'));
+                newMapArray.map(elem => map.set(elem.email, elem));
+                map = await CLEANER(map);
+                map = await BotSetup(map);
+            } else {
+                await TIMESTOP(10000)
+                map = await BotSetup(map);
+            }
         }
 
 
@@ -25,5 +28,5 @@ const BotSetup = require('./Modules/BotRecreation');
     }
 
 
-})()
+})();
 

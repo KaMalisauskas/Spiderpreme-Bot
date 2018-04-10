@@ -51,6 +51,7 @@ module.exports = exports = (map, index) => {
 
                     if (title.includes(KEYWORD)) containsKeyword = title;
                     else if (linksTitle.includes(KEYWORD)) containsKeyword = linksTitle;
+
                     if (containsKeyword && !MENTIONED.has(containsKeyword)) {
                         console.log('**** Found new post!!');
 
