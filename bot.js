@@ -10,7 +10,7 @@ const BotSetup = require('./Modules/BotRecreation');
 
     try {
         let map = await BotSetup()
-
+        console.log(map)
         while(true) {
             let newMapArray = await Promise.all(map.get('bot'));
             newMapArray.map(elem => map.set(elem.email, elem));

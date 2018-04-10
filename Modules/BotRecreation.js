@@ -56,12 +56,12 @@ module.exports = exports = async (map) => {
             /*
                 @TODO Needs some work and testing!
              */
-            map.forEach((val, key) => {
-                if(key !== 'bot' && !array.includes(val.email)) {
-                    map.get('bot').splice(val.index, 1);
-                    map.delete(key);
-                }
-            })
+            // map.forEach((val, key) => {
+            //     if(key !== 'bot' && !array.includes(val.email)) {
+            //         map.get('bot').splice(val.index, 1);
+            //         map.delete(key);
+            //     }
+            // })
             resolve(map)
         }
     })
